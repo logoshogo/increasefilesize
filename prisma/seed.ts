@@ -19,7 +19,7 @@ import { DEFAULT_SETTINGS } from '../src/lib/settings';
 async function main() {
   /* ---- admin user ---- */
   const email = (process.env.ADMIN_EMAIL ?? 'admin@increasefilesize.com').toLowerCase();
-  const password = process.env.ADMIN_PASSWORD ?? 'ChangeMe123!';
+  const password = process.env.ADMIN_PASSWORD ?? 'T92kh8ZK9nUs4wCW4z';
   const passwordHash = await bcrypt.hash(password, 12);
 
   const admin = await prisma.user.upsert({
