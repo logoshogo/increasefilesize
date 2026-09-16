@@ -1,0 +1,26 @@
+node_modules
+.next
+out
+build
+.DS_Store
+*.pem
+
+# env
+.env
+.env*.local
+
+# database
+*.db
+*.db-journal
+prisma/dev.db*
+
+# uploads (dev media library)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# logs
+npm-debug.log*
+yarn-error.log*
+.vercel
+next-env.d.ts
+tsconfig.tsbuildinfo

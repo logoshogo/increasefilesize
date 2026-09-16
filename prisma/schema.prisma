@@ -1,0 +1,126 @@
+// Prisma schema for increasefilesize.com
+//
+// Dev/local uses SQLite. To move to Postgres (Neon / Supabase) for production:
+//   1. change `provider` below to "postgresql"
+//   2. set DATABASE_URL to the Postgres connection string
+//   3. run `npx prisma migrate deploy`
+// No model changes are required — every field type used here is portable
+// across both providers (no SQLite-only or Postgres-only types, no enums:
+// status/type fields are plain strings validated in application code so the
+// schema stays provider-agnostic).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  articles Article[]
+}
+
+model Article {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  title           String
+  excerpt         String?
+  // Tiptap HTML output
+  content         String    @default("")
+  // "DRAFT" | "PUBLISHED" | "SCHEDULED"
+  status          String    @default("DRAFT")
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  authorId        String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([status, publishedAt])
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  filename  String
+  mimeType  String
+  size      Int
+  width     Int?
+  height    Int?
+  alt       String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// Lightweight first-party analytics. One row per beaconed user action.
+// Files are never part of an event — only the metadata below.
+model Event {
+  id        String   @id @default(cuid())
+  // "pageview" | "file_selected" | "process_started" | "download_completed" | "error"
+  type      String
+  path      String
+  // "jpg" | "png" | "pdf" | null
+  format    String?
+  // target size in bytes, when the event relates to the tool
+  targetSize Int?
+  // "pad" | "upscale"
+  mode      String?
+  // anonymous rolling visitor id (random, client-generated, not a fingerprint)
+  visitorId String?
+  referrer  String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([path, createdAt])
+  @@index([createdAt])
+  @@index([visitorId, createdAt])
+}
+
+// Drives the dynamic landing-page route. Seeded from src/config/target-pages.ts
+// and editable from /admin/pages without touching code.
+model TargetPage {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  // "jpg" | "png" | "pdf" | "any"
+  format      String
+  // target size in bytes; null for non-size pages (e.g. /increase-png-file-quality)
+  targetBytes Int?
+  // human label, e.g. "100KB"
+  targetLabel String?
+  keyword     String
+  // optional per-page copy overrides
+  introOverride String?
+  h1Override    String?
+  titleOverride String?
+  metaOverride  String?
+  // "tool" | "informational"
+  kind        String   @default("tool")
+  // default engine mode for the embedded widget: "pad" | "upscale"
+  defaultMode String   @default("pad")
+  enabled     Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([enabled])
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}

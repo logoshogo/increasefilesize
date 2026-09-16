@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 antialiased;
+}
+
+/* Article body styling — applied to Tiptap HTML output on the blog. */
+.prose-article {
+  @apply text-[1.0625rem] leading-relaxed text-slate-700;
+}
+.prose-article > * + * {
+  @apply mt-5;
+}
+.prose-article h2 {
+  @apply mt-10 text-2xl font-semibold tracking-tight text-slate-900;
+}
+.prose-article h3 {
+  @apply mt-8 text-xl font-semibold tracking-tight text-slate-900;
+}
+.prose-article a {
+  @apply font-medium text-brand-700 underline decoration-brand-300 underline-offset-2 hover:decoration-brand-600;
+}
+.prose-article ul {
+  @apply list-disc space-y-2 pl-6;
+}
+.prose-article ol {
+  @apply list-decimal space-y-2 pl-6;
+}
+.prose-article blockquote {
+  @apply border-l-4 border-brand-200 bg-white py-2 pl-5 pr-4 italic text-slate-600;
+}
+.prose-article code {
+  @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[0.9em] text-slate-800;
+}
+.prose-article pre {
+  @apply overflow-x-auto rounded-xl bg-slate-900 p-4 text-sm text-slate-100;
+}
+.prose-article pre code {
+  @apply bg-transparent p-0 text-slate-100;
+}
+.prose-article img {
+  @apply rounded-xl border border-slate-200;
+}
+.prose-article strong {
+  @apply font-semibold text-slate-900;
+}
+
+/* Tiptap editor surface in the admin */
+.tiptap-editor .ProseMirror {
+  @apply min-h-[420px] rounded-b-xl bg-white px-5 py-4 text-slate-800 outline-none;
+}
+.tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply pointer-events-none float-left h-0 text-slate-400;
+}
+.tiptap-editor .ProseMirror h2 {
+  @apply mt-6 text-2xl font-semibold text-slate-900;
+}
+.tiptap-editor .ProseMirror h3 {
+  @apply mt-5 text-xl font-semibold text-slate-900;
+}
+.tiptap-editor .ProseMirror ul {
+  @apply list-disc pl-6;
+}
+.tiptap-editor .ProseMirror ol {
+  @apply list-decimal pl-6;
+}
+.tiptap-editor .ProseMirror blockquote {
+  @apply border-l-4 border-slate-300 pl-4 italic text-slate-600;
+}
+.tiptap-editor .ProseMirror pre {
+  @apply overflow-x-auto rounded-lg bg-slate-900 p-3 text-sm text-slate-100;
+}
+.tiptap-editor .ProseMirror img {
+  @apply my-3 max-w-full rounded-lg border border-slate-200;
+}
+.tiptap-editor .ProseMirror a {
+  @apply text-brand-700 underline;
+}
+.tiptap-editor .ProseMirror > * + * {
+  @apply mt-3;
+}
